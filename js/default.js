@@ -134,15 +134,16 @@ Cobrinha = new Class({
             colidiu = (pos % this.jogo.grid.cols === 0);
         }
 
-        if (colidiu){
-            return this.jogo.gameOver();
-        }
 
         this.blocos[0].lastPosition = this.blocos[0].position
         this.blocos[0].position = pos;
 
         this.blocos[0].lastSquare = this.blocos[0].square
         this.blocos[0].square = this.jogo.grid.el.getElements('> div')[pos];
+
+        if (colidiu || this.autoColisao()){
+            return this.jogo.gameOver();
+        }
 
         this.blocos[0].el.inject(this.blocos[0].square);
 
@@ -157,6 +158,18 @@ Cobrinha = new Class({
                 this.blocos[n].el.inject(this.blocos[n].square);
             }
         });
+    },
+
+    autoColisao(){
+        let ac = false;
+        this.blocos.each((bloco, n) => {
+            if (n > 0 && !ac){
+                if (bloco.square === this.blocos[0].square){
+                    ac = true;
+                }
+            }
+        });
+        return ac;
     },
 });
 
