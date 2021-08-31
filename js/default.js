@@ -74,20 +74,14 @@ Grid = new Class({
 
 Cobrinha = new Class({
     direcao: 'right',
+    blocos: [],
 
     initialize(jogo) {
         this.jogo = jogo;
 
-        //let randomNum = parseInt(Math.random() * (this.jogo.grid.cols * this.jogo.grid.rows));
-        this.position = 245;
-        this.square = this.jogo.grid.el.getElements('> div')[this.position];
-
-        this.el = new Element('div', {
-            'styles': {
-                'background': '#333',
-                'height': '100%',
-            }
-        }).inject(this.square);
+        //let randomPosition = parseInt(Math.random() * (this.jogo.grid.cols * this.jogo.grid.rows));
+        let position = 245;
+        this.blocos.push(new Bloco(this, position));
 
         window.addEvents({
             'keydown': (ev) => {
@@ -107,37 +101,78 @@ Cobrinha = new Class({
                     if (this.direcao != 'left'){
                         this.direcao = 'right';
                     }
+                } else if (ev.key == 'k') {
+                    this.novoBloco();
                 }
             },
         });
     },
 
+    novoBloco(){
+        position = this.blocos[this.blocos.length - 1].position - 1;
+        this.blocos.push(new Bloco(this, position, '#777'));
+    },
+
     step() {
         let colidiu = false;
+        let pos = this.blocos[0].position;
 
         if (this.direcao == 'up'){
-            this.position -= this.jogo.grid.cols;
-            colidiu = (this.position < 0);
+            pos -= this.jogo.grid.cols;
+            colidiu = (pos < 0);
         }
         else if (this.direcao == 'down'){
-            this.position += this.jogo.grid.cols;
-            colidiu = (this.position > (this.jogo.grid.cols * this.jogo.grid.rows) - 1);
+            pos += this.jogo.grid.cols;
+            colidiu = (pos > (this.jogo.grid.cols * this.jogo.grid.rows) - 1);
         }
         else if (this.direcao == 'left'){
-            this.position--;
-            colidiu = ((this.position + 1) % this.jogo.grid.cols === 0);
+            pos--;
+            colidiu = ((pos + 1) % this.jogo.grid.cols === 0);
         }
         else if (this.direcao == 'right'){
-            this.position++;
-            colidiu = (this.position % this.jogo.grid.cols === 0);
+            pos++;
+            colidiu = (pos % this.jogo.grid.cols === 0);
         }
 
         if (colidiu){
             return this.jogo.gameOver();
         }
 
-        this.square = this.jogo.grid.el.getElements('> div')[this.position];
-        this.el.inject(this.square);
+        this.blocos[0].lastPosition = this.blocos[0].position
+        this.blocos[0].position = pos;
+
+        this.blocos[0].lastSquare = this.blocos[0].square
+        this.blocos[0].square = this.jogo.grid.el.getElements('> div')[pos];
+
+        this.blocos[0].el.inject(this.blocos[0].square);
+
+        this.blocos.each((bloco, n) => {
+            if (n > 0){
+                this.blocos[n].lastPosition = this.blocos[n].position;
+                this.blocos[n].position = this.blocos[n-1].lastPosition;
+
+                this.blocos[n].lastSquare = this.blocos[n].square;
+                this.blocos[n].square = this.blocos[n-1].lastSquare;
+
+                this.blocos[n].el.inject(this.blocos[n].square);
+            }
+        });
+    },
+});
+
+Bloco = new Class({
+    initialize(cobrinha, position, cor) {
+        this.cobrinha = cobrinha;
+        this.position = position;
+
+        this.square = this.cobrinha.jogo.grid.el.getElements('> div')[this.position];
+
+        this.el = new Element('div', {
+            'styles': {
+                'background': cor || '#333',
+                'height': '100%',
+            }
+        }).inject(this.square);
 
     },
 });
