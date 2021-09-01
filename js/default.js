@@ -36,8 +36,10 @@ Jogo = new Class({
     },
 
     gameOver(){
-        this.running = false;
-        alert('GAME OVER');
+        if (this.running){
+            this.running = false;
+            alert('GAME OVER');
+        }
     },
 });
 
