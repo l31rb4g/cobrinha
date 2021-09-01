@@ -6,7 +6,11 @@ Jogo = new Class({
     initialize(container) {
         this.container = container;
         this.grid = new Grid(this);
+
         this.cobrinha = new Cobrinha(this);
+        this.cobrinha.novoBloco();
+        this.cobrinha.novoBloco();
+
         this.novaComida();
 
         $$('body')[0].setStyles({
