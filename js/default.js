@@ -6,6 +6,7 @@ Jogo = new Class({
     initialize() {
         this.grid = new Grid(this);
         this.cobrinha = new Cobrinha(this);
+        this.novaComida();
 
         this.intervalSpeed = setInterval(() => {
             this.speed -= 10;
@@ -26,6 +27,10 @@ Jogo = new Class({
                 this.step();
             }, this.speed);
         }
+    },
+
+    novaComida() {
+        this.comida = new Comida(this);
     },
 
     gameOver(){
@@ -69,6 +74,11 @@ Grid = new Class({
         }
 
         this.el.inject(body);
+    },
+
+    getRandomSquare(){
+        let num = parseInt(Math.random() * this.cols * this.rows);
+        return this.el.getElements('> div')[num];
     },
 });
 
@@ -157,6 +167,12 @@ Cobrinha = new Class({
             return this.jogo.gameOver();
         }
 
+        if (this.blocos[0].square == this.jogo.comida.square) {
+            this.jogo.comida.die();
+            this.novoBloco();
+            this.jogo.novaComida();
+        }
+
         this.blocos[0].el.inject(this.blocos[0].square);
 
         this.blocos.each((bloco, n) => {
@@ -190,6 +206,7 @@ Bloco = new Class({
         this.cobrinha = cobrinha;
         this.position = position;
 
+        // crashando se for fora do grid
         this.square = this.cobrinha.jogo.grid.el.getElements('> div')[this.position];
 
         this.el = new Element('div', {
@@ -199,6 +216,25 @@ Bloco = new Class({
             }
         }).inject(this.square);
 
+    },
+});
+
+Comida = new Class({
+    initialize(jogo) {
+        this.jogo = jogo;
+
+        this.square = this.jogo.grid.getRandomSquare();
+
+        this.el = new Element('div', {
+            'styles': {
+                'background': 'pink',
+                'height': '100%',
+            },
+        }).inject(this.square);
+    },
+
+    die() {
+        this.el.dispose();
     },
 });
 
