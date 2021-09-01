@@ -3,10 +3,16 @@ Jogo = new Class({
     speed: 250,
     running: true,
 
-    initialize() {
+    initialize(container) {
+        this.container = container;
         this.grid = new Grid(this);
         this.cobrinha = new Cobrinha(this);
         this.novaComida();
+
+        $$('body')[0].setStyles({
+            'overflow': 'hidden',
+            'font-family': 'Roboto, Arial',
+        });
 
         this.intervalSpeed = setInterval(() => {
             this.speed -= 10;
@@ -44,36 +50,37 @@ Grid = new Class({
     initialize(jogo) {
         this.jogo = jogo;
 
-        let body = $$('body')[0];
-        body.setStyles({
+        this.jogo.container.setStyles({
             'padding': 0,
             'margin': 0,
             'overflow': 'hidden',
+            'box-sizing': 'border-box',
         });
 
         this.el = new Element('div', {
             'styles': {
                 'display': 'flex',
                 'flex-wrap': 'wrap',
-                'border': '1px solid #f5f5f5',
+                'border': '1px solid #f3f3f3',
+                'box-sizing': 'border-box',
             },
         });
 
-        this.cols = Math.floor(window.getSize().x / 36);
-        this.rows = Math.floor(window.getSize().y / 32);
+        this.cols = Math.floor(this.jogo.container.getSize().x / 36);
+        this.rows = Math.floor(this.jogo.container.getSize().y / 32);
 
         for (i=0; i<this.cols * this.rows; i++){
             new Element('div', {
                 'styles': {
                     'width': 36,
                     'height': 32,
-                    'border': '1px solid #f5f5f5',
+                    'border': '1px solid #f3f3f3',
                     'box-sizing': 'border-box',
                 },
             }).inject(this.el);
         }
 
-        this.el.inject(body);
+        this.el.inject(this.jogo.container);
     },
 
     getRandomSquare(){
@@ -90,7 +97,7 @@ Cobrinha = new Class({
         this.jogo = jogo;
 
         //let randomPosition = parseInt(Math.random() * (this.jogo.grid.cols * this.jogo.grid.rows));
-        let position = 245;
+        let position = this.jogo.grid.cols * (this.jogo.grid.rows * 0.4) + 3;
         this.blocos.push(new Bloco(this, position));
 
         window.addEvents({
@@ -226,9 +233,17 @@ Comida = new Class({
         this.square = this.jogo.grid.getRandomSquare();
 
         this.el = new Element('div', {
+            'id': 'ee',
+            'text': 'OS',
             'styles': {
-                'background': 'pink',
                 'height': '100%',
+                'color': '#fff',
+                'background': '#3779C6',
+                'border': '1px solid #3779C6',
+                'line-height': 29,
+                'text-align': 'center',
+                'font-size': 11,
+                'font-weight': 'bold',
             },
         }).inject(this.square);
     },
@@ -239,7 +254,5 @@ Comida = new Class({
 });
 
 
-window.addEvent('domready', () => {
-    new Jogo();
-});
+new Jogo($('ee'));
 
