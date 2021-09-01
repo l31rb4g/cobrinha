@@ -1,6 +1,6 @@
 
 Jogo = new Class({
-    speed: 250,
+    speed: 200,
     running: true,
 
     initialize(container) {
@@ -13,14 +13,6 @@ Jogo = new Class({
             'overflow': 'hidden',
             'font-family': 'Roboto, Arial',
         });
-
-        this.intervalSpeed = setInterval(() => {
-            this.speed -= 10;
-            if (this.speed < 30){
-                this.speed = 30;
-                clearInterval(this.intervalSpeed);
-            }
-        }, 5000);
 
         this.step();
     },
@@ -37,11 +29,14 @@ Jogo = new Class({
 
     novaComida() {
         this.comida = new Comida(this);
+        this.speed -= 10;
+        if (this.speed < 30){
+            this.speed = 30;
+        }
     },
 
     gameOver(){
         this.running = false;
-        clearInterval(this.intervalSpeed);
         alert('GAME OVER');
     },
 });
