@@ -253,6 +253,3 @@ Comida = new Class({
     },
 });
 
-
-new Jogo($('ee'));
-
