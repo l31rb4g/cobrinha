@@ -108,9 +108,15 @@ Cobrinha = new Class({
         window.addEvents({
             'keydown': (ev) => {
                 if (this.fila.length > 2) return;
+                
+                let direcao = ev.key;
+                if (direcao == 'w') direcao = 'up';
+                if (direcao == 'a') direcao = 'left';
+                if (direcao == 's') direcao = 'down';
+                if (direcao == 'd') direcao = 'right';
 
-                if (['up', 'down', 'left', 'right'].contains(ev.key)){
-                    this.fila.push(ev.key);
+                if (['up', 'down', 'left', 'right'].contains(direcao)){
+                    this.fila.push(direcao);
                 }
                 else if (ev.key == 'k') {
                     this.novoBloco();
