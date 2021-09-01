@@ -182,7 +182,7 @@ Cobrinha = new Class({
                 this.direcao = direcao;
             }
         } else {
-            return;
+            //return;
             direcao = this.direcao;
         }
 
