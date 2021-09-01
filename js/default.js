@@ -50,7 +50,7 @@ Grid = new Class({
             'styles': {
                 'display': 'flex',
                 'flex-wrap': 'wrap',
-                'border': '1px solid #ccc',
+                'border': '1px solid #f5f5f5',
             },
         });
 
@@ -62,7 +62,7 @@ Grid = new Class({
                 'styles': {
                     'width': 36,
                     'height': 32,
-                    'border': '1px solid #ccc',
+                    'border': '1px solid #f5f5f5',
                     'box-sizing': 'border-box',
                 },
             }).inject(this.el);
@@ -109,7 +109,19 @@ Cobrinha = new Class({
     },
 
     novoBloco(){
-        position = this.blocos[this.blocos.length - 1].position - 1;
+        if (this.direcao === 'right'){
+            position = this.blocos[this.blocos.length - 1].position - 1;
+        }
+        else if (this.direcao == 'left'){
+            position = this.blocos[this.blocos.length - 1].position + 1;
+        }
+        else if (this.direcao == 'up'){
+            position = this.blocos[this.blocos.length - 1].position + this.jogo.grid.cols;
+        }
+        else if (this.direcao == 'down'){
+            position = this.blocos[this.blocos.length - 1].position - this.jogo.grid.cols;
+        }
+
         this.blocos.push(new Bloco(this, position, '#777'));
     },
 
