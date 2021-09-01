@@ -93,33 +93,26 @@ Grid = new Class({
 Cobrinha = new Class({
     direcao: 'right',
     blocos: [],
+    fila: [],
 
     initialize(jogo) {
         this.jogo = jogo;
 
-        //let randomPosition = parseInt(Math.random() * (this.jogo.grid.cols * this.jogo.grid.rows));
         let position = this.jogo.grid.cols * (this.jogo.grid.rows * 0.4) + 3;
         this.blocos.push(new Bloco(this, position));
 
+        this.addEvents();
+    },
+
+    addEvents() {
         window.addEvents({
             'keydown': (ev) => {
-                if (ev.key === 'up'){
-                    if (this.direcao != 'down'){
-                        this.direcao = 'up';
-                    }
-                } else if (ev.key == 'down'){
-                    if (this.direcao != 'up'){
-                        this.direcao = 'down';
-                    }
-                } else if (ev.key == 'left'){
-                    if (this.direcao != 'right'){
-                        this.direcao = 'left';
-                    }
-                } else if (ev.key == 'right'){
-                    if (this.direcao != 'left'){
-                        this.direcao = 'right';
-                    }
-                } else if (ev.key == 'k') {
+                if (this.fila.length > 2) return;
+
+                if (['up', 'down', 'left', 'right'].contains(ev.key)){
+                    this.fila.push(ev.key);
+                }
+                else if (ev.key == 'k') {
                     this.novoBloco();
                 }
             },
@@ -146,20 +139,41 @@ Cobrinha = new Class({
     step() {
         let colidiu = false;
         let pos = this.blocos[0].position;
+        let direcao;
 
-        if (this.direcao == 'up'){
+        if (this.fila.length > 0){
+
+            direcao = this.fila[0];
+            this.fila = this.fila.splice(1);
+
+            if (
+                    (this.direcao == 'up' && direcao == 'down') ||
+                    (this.direcao == 'down' && direcao == 'up') ||
+                    (this.direcao == 'left' && direcao == 'right') ||
+                    (this.direcao == 'right' && direcao == 'left')
+                ){
+                // movimento ilegal
+                direcao = this.direcao;
+            } else {
+                this.direcao = direcao;
+            }
+        } else {
+            direcao = this.direcao;
+        }
+
+        if (direcao == 'up'){
             pos -= this.jogo.grid.cols;
             colidiu = (pos < 0);
         }
-        else if (this.direcao == 'down'){
+        else if (direcao == 'down'){
             pos += this.jogo.grid.cols;
             colidiu = (pos > (this.jogo.grid.cols * this.jogo.grid.rows) - 1);
         }
-        else if (this.direcao == 'left'){
+        else if (direcao == 'left'){
             pos--;
             colidiu = ((pos + 1) % this.jogo.grid.cols === 0);
         }
-        else if (this.direcao == 'right'){
+        else if (direcao == 'right'){
             pos++;
             colidiu = (pos % this.jogo.grid.cols === 0);
         }
