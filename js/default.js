@@ -126,16 +126,35 @@ Cobrinha = new Class({
     },
 
     novoBloco(){
-        if (this.direcao === 'right'){
+        let direcao;
+
+        if (this.blocos.length > 2){
+            let u = this.blocos[this.blocos.length - 1];
+            let p = this.blocos[this.blocos.length - 2];
+
+            if ((u.position + 1) == p.position){
+                direcao = 'right';
+            } else if ((u.position - 1) == p.position){
+                direcao = 'left';
+            } else if ((u.position - this.jogo.grid.cols) == p.position){
+                direcao = 'up';
+            } else if ((u.position + this.jogo.grid.cols) == p.position){
+                direcao = 'down';
+            }
+        } else {
+            direcao = this.direcao;
+        }
+
+        if (direcao === 'right'){
             position = this.blocos[this.blocos.length - 1].position - 1;
         }
-        else if (this.direcao == 'left'){
+        else if (direcao == 'left'){
             position = this.blocos[this.blocos.length - 1].position + 1;
         }
-        else if (this.direcao == 'up'){
+        else if (direcao == 'up'){
             position = this.blocos[this.blocos.length - 1].position + this.jogo.grid.cols;
         }
-        else if (this.direcao == 'down'){
+        else if (direcao == 'down'){
             position = this.blocos[this.blocos.length - 1].position - this.jogo.grid.cols;
         }
 
@@ -148,7 +167,6 @@ Cobrinha = new Class({
         let direcao;
 
         if (this.fila.length > 0){
-
             direcao = this.fila[0];
             this.fila = this.fila.splice(1);
 
@@ -164,6 +182,7 @@ Cobrinha = new Class({
                 this.direcao = direcao;
             }
         } else {
+            return;
             direcao = this.direcao;
         }
 
