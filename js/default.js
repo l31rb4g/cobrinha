@@ -33,7 +33,7 @@ Jogo = new Class({
 
     novaComida() {
         this.comida = new Comida(this);
-        this.speed -= 10;
+        this.speed -= 5;
         if (this.speed < 30){
             this.speed = 30;
         }
