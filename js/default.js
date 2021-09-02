@@ -3,7 +3,7 @@ Jogo = new Class({
     speed: 200,
     running: true,
 
-    debug: true,
+    debug: false,
 
     initialize(container) {
         this.container = container;
@@ -68,7 +68,7 @@ Grid = new Class({
         });
 
         let espacoDisponivel = {
-            x: this.jogo.container.getSize().x - 150,
+            x: this.jogo.container.getSize().x - this.jogo.painel.width,
             y: this.jogo.container.getSize().y,
         }
 
@@ -86,7 +86,6 @@ Grid = new Class({
 
         this.cols = Math.floor(espacoDisponivel.x / 36);
         this.rows = Math.floor(espacoDisponivel.y / 32);
-        console.log('cols', this.cols, 'rows', this.rows);
 
         for (i=0; i<this.cols * this.rows; i++){
             new Element('div', {
@@ -110,12 +109,14 @@ Grid = new Class({
 
 
 Painel = new Class({
+    width: 110,
+
     initialize(jogo) {
         this.jogo = jogo;
         
         this.el = new Element('div', {
             'styles': {
-                'width': 150,
+                'width': this.width,
                 'height': this.jogo.container.getSize().y,
                 'background': '#eee',
             }
@@ -290,12 +291,8 @@ Bloco = new Class({
         this.cobrinha = cobrinha;
         this.position = position;
 
-        console.log('position', this.position);
-
         // crashando se for fora do grid
         this.square = this.cobrinha.jogo.grid.el.getElements('> div')[this.position];
-
-        console.log('square', this.square);
 
         this.el = new Element('div', {
             'styles': {
