@@ -3,8 +3,17 @@ Jogo = new Class({
     speed: 200,
     running: true,
 
+    debug: true,
+
     initialize(container) {
         this.container = container;
+
+        this.container.setStyles({
+            'display': 'flex',
+            'font-family': 'Roboto, Arial',
+        });
+
+        this.painel = new Painel(this);
         this.grid = new Grid(this);
 
         this.cobrinha = new Cobrinha(this);
@@ -15,7 +24,6 @@ Jogo = new Class({
 
         $$('body')[0].setStyles({
             'overflow': 'hidden',
-            'font-family': 'Roboto, Arial',
         });
 
         this.step();
@@ -47,6 +55,7 @@ Jogo = new Class({
     },
 });
 
+
 Grid = new Class({
     initialize(jogo) {
         this.jogo = jogo;
@@ -58,17 +67,26 @@ Grid = new Class({
             'box-sizing': 'border-box',
         });
 
+        let espacoDisponivel = {
+            x: this.jogo.container.getSize().x - 150,
+            y: this.jogo.container.getSize().y,
+        }
+
         this.el = new Element('div', {
             'styles': {
                 'display': 'flex',
+                'width': espacoDisponivel.x,
+                'height': espacoDisponivel.y,
                 'flex-wrap': 'wrap',
                 'border': '1px solid #f3f3f3',
                 'box-sizing': 'border-box',
+                'align-content': 'flex-start',
             },
         });
 
-        this.cols = Math.floor(this.jogo.container.getSize().x / 36);
-        this.rows = Math.floor(this.jogo.container.getSize().y / 32);
+        this.cols = Math.floor(espacoDisponivel.x / 36);
+        this.rows = Math.floor(espacoDisponivel.y / 32);
+        console.log('cols', this.cols, 'rows', this.rows);
 
         for (i=0; i<this.cols * this.rows; i++){
             new Element('div', {
@@ -90,6 +108,22 @@ Grid = new Class({
     },
 });
 
+
+Painel = new Class({
+    initialize(jogo) {
+        this.jogo = jogo;
+        
+        this.el = new Element('div', {
+            'styles': {
+                'width': 150,
+                'height': this.jogo.container.getSize().y,
+                'background': '#eee',
+            }
+        }).inject(this.jogo.container);
+    }
+});
+
+
 Cobrinha = new Class({
     direcao: 'right',
     blocos: [],
@@ -98,7 +132,7 @@ Cobrinha = new Class({
     initialize(jogo) {
         this.jogo = jogo;
 
-        let position = this.jogo.grid.cols * (this.jogo.grid.rows * 0.4) + 3;
+        let position = parseInt(this.jogo.grid.cols * (this.jogo.grid.rows * 0.4) + 3);
         this.blocos.push(new Bloco(this, position));
 
         this.addEvents();
@@ -182,7 +216,9 @@ Cobrinha = new Class({
                 this.direcao = direcao;
             }
         } else {
-            //return;
+            if (this.jogo.debug){
+                return;
+            }
             direcao = this.direcao;
         }
 
@@ -248,23 +284,32 @@ Cobrinha = new Class({
     },
 });
 
+
 Bloco = new Class({
     initialize(cobrinha, position, cor) {
         this.cobrinha = cobrinha;
         this.position = position;
 
+        console.log('position', this.position);
+
         // crashando se for fora do grid
         this.square = this.cobrinha.jogo.grid.el.getElements('> div')[this.position];
+
+        console.log('square', this.square);
 
         this.el = new Element('div', {
             'styles': {
                 'background': cor || '#333',
                 'height': '100%',
+                'margin': 0,
+                'padding': 0,
+                'box-sizing': 'border-box',
             }
         }).inject(this.square);
 
     },
 });
+
 
 Comida = new Class({
     initialize(jogo) {
