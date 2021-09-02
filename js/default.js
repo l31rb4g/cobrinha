@@ -109,7 +109,7 @@ Grid = new Class({
 
 
 Painel = new Class({
-    width: 110,
+    width: 108,
 
     initialize(jogo) {
         this.jogo = jogo;
