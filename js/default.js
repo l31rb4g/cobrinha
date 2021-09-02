@@ -1,5 +1,6 @@
 
 Jogo = new Class({
+    score: 0,
     speed: 200,
     running: true,
 
@@ -118,10 +119,53 @@ Painel = new Class({
             'styles': {
                 'width': this.width,
                 'height': this.jogo.container.getSize().y,
+                'box-sizing': 'border-box',
                 'background': '#eee',
+                'color': '#333',
+                'padding': 10,
+                'font-size': 12,
             }
-        }).inject(this.jogo.container);
-    }
+        }).adopt(
+            new Element('div', {
+                'text': 'PONTUAÇÃO',
+                'styles': {
+                    'font-weight': 'bold',
+                    'margin-top': 10,
+                }
+            }),
+            new Element('div', {
+                'class': 'score',
+            }),
+            new Element('div', {
+                'text': 'VELOCIDADE',
+                'styles': {
+                    'font-weight': 'bold',
+                    'margin-top': 20,
+                }
+            }),
+            new Element('div', {
+                'class': 'speed',
+            }),
+        ).inject(this.jogo.container);
+        this.refresh();
+    },
+
+    milhares(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    },
+
+    refresh() {
+        this.el.getElement('.score').set('text', this.milhares(this.jogo.score));
+
+        let velocidade = parseInt((1 - (this.jogo.speed - 30) / 170) * 100);
+        if (velocidade <= 0){
+            velocidade = 1;
+        }
+        if (velocidade > 100){
+            velocidade = 100;
+        }
+        this.el.getElement('.speed').set('text', velocidade + '%');
+    },
 });
 
 
@@ -251,10 +295,13 @@ Cobrinha = new Class({
             return this.jogo.gameOver();
         }
 
+        // comeu
         if (this.blocos[0].square == this.jogo.comida.square) {
             this.jogo.comida.die();
             this.novoBloco();
             this.jogo.novaComida();
+            this.jogo.score += 10;
+            this.jogo.painel.refresh();
         }
 
         this.blocos[0].el.inject(this.blocos[0].square);
@@ -303,7 +350,6 @@ Bloco = new Class({
                 'box-sizing': 'border-box',
             }
         }).inject(this.square);
-
     },
 });
 
