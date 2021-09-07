@@ -16,18 +16,22 @@ Jogo = new Class({
 
         this.painel = new Painel(this);
         this.grid = new Grid(this);
+        this.grid.splash();
 
-        this.cobrinha = new Cobrinha(this);
-        this.cobrinha.novoBloco();
-        this.cobrinha.novoBloco();
+        setTimeout(() => {
+            this.grid.clear();
+            this.cobrinha = new Cobrinha(this);
+            this.cobrinha.novoBloco();
+            this.cobrinha.novoBloco();
 
-        this.novaComida();
+            this.novaComida();
 
-        $$('body')[0].setStyles({
-            'overflow': 'hidden',
-        });
+            $$('body')[0].setStyles({
+                'overflow': 'hidden',
+            });
 
-        this.step();
+            this.step();
+        }, 500);
     },
 
     step(){
@@ -51,13 +55,15 @@ Jogo = new Class({
     gameOver(){
         if (this.running){
             this.running = false;
-            alert('GAME OVER');
+            alert('Fim de jogo! Você fez ' + this.score + ' pontos.');
         }
     },
 });
 
 
 Grid = new Class({
+    splashed: [],
+
     initialize(jogo) {
         this.jogo = jogo;
 
@@ -105,6 +111,55 @@ Grid = new Class({
     getRandomSquare(){
         let num = parseInt(Math.random() * this.cols * this.rows);
         return this.el.getElements('> div')[num];
+    },
+
+    splash() {
+        let art = `
+            ----PPPPP------
+            ---PAAAAAP-----
+            ---PAAAAAAP----
+            --PAPAAAPAP----
+            --PAPAAAPAVP---
+            --PRAAAAARVP---
+            ---PVVVVVVP----
+            ----PPPPPPP----
+            --PPAAPAAVPP---
+            -PAAAPAAAVPVP--
+            PAAPVVVVVPAVVP-
+            PVAAPPPPPAAVPVP
+            PVAAAAAAAAAVPVP
+            -PVVVVVVVVVPPVP
+            --PPPPPPPPP--P-
+        `;
+        let cores = {
+            '-': 'transparent',
+            'P': '#000',
+            'A': '#95B90B',
+            'V': '#009900',
+            'R': '#EDC1D2',
+        }
+
+        let x = Math.floor((this.cols - 15) / 2);
+        let y = Math.floor((this.rows - 15) / 2);
+        let rows = art.trim().split('\n');
+        let div;
+        let row;
+
+        rows.each((_row) => {
+            row = _row.trim();
+            for (col=0; col<row.length; col++){
+                div = this.el.getElements('> div')[(y * this.cols) + x + col];
+                div.setStyle('background', cores[row[col]]);
+                this.splashed.push(div);
+            }
+            y++;
+        });
+    },
+
+    clear() {
+        this.splashed.each((el) => {
+            el.setStyle('background', 'none');
+        });
     },
 });
 
