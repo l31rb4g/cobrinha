@@ -461,6 +461,8 @@ GameOver = new Class({
                 'position': 'fixed',
                 'width': '100%',
                 'height': '100%',
+                'top': 0,
+                'left': 0,
                 'background': '#333',
                 'opacity': 0.8,
                 'z-index': 4,
