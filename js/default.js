@@ -13,7 +13,6 @@ Jogo = new Class({
 
     start(){
         this.container.setStyles({
-            'position': 'absolute',
             'display': 'flex',
             'font-family': 'Roboto, Arial',
         });
