@@ -20,18 +20,27 @@ Jogo = new Class({
         this.painel = new Painel(this);
         this.grid = new Grid(this);
 
-        this.grid.clear();
-        this.cobrinha = new Cobrinha(this);
-        this.cobrinha.novoBloco();
-        this.cobrinha.novoBloco();
+        let sleep = 0;
+        if (this.grid.cols >= 15 && this.grid.rows >= 15){
+            this.grid.splash();
+            sleep = 500;
+        }
 
-        this.novaComida();
+        setTimeout(() => {
+            this.grid.clear();
+            this.cobrinha = new Cobrinha(this);
+            this.cobrinha.novoBloco();
+            this.cobrinha.novoBloco();
 
-        $$('body')[0].setStyles({
-            'overflow': 'hidden',
-        });
+            this.novaComida();
 
-        this.step();
+            $$('body')[0].setStyles({
+                'overflow': 'hidden',
+            });
+
+            this.step();
+
+        }, sleep);
     },
 
     step(){
