@@ -16,22 +16,19 @@ Jogo = new Class({
 
         this.painel = new Painel(this);
         this.grid = new Grid(this);
-        this.grid.splash();
 
-        setTimeout(() => {
-            this.grid.clear();
-            this.cobrinha = new Cobrinha(this);
-            this.cobrinha.novoBloco();
-            this.cobrinha.novoBloco();
+        this.grid.clear();
+        this.cobrinha = new Cobrinha(this);
+        this.cobrinha.novoBloco();
+        this.cobrinha.novoBloco();
 
-            this.novaComida();
+        this.novaComida();
 
-            $$('body')[0].setStyles({
-                'overflow': 'hidden',
-            });
+        $$('body')[0].setStyles({
+            'overflow': 'hidden',
+        });
 
-            this.step();
-        }, 500);
+        this.step();
     },
 
     step(){
