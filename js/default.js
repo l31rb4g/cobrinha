@@ -355,10 +355,14 @@ Bloco = new Class({
 
 
 Comida = new Class({
+    square: null,
+
     initialize(jogo) {
         this.jogo = jogo;
 
-        this.square = this.jogo.grid.getRandomSquare();
+        while (!this.square || this.square.getChildren().length > 0){
+            this.square = this.jogo.grid.getRandomSquare();
+        }
 
         this.el = new Element('div', {
             'id': 'ee',
