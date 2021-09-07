@@ -456,7 +456,7 @@ GameOver = new Class({
     initialize(jogo) {
         this.jogo = jogo;
 
-        this.overlay = new Element('div', {
+        /*this.overlay = new Element('div', {
             'styles': {
                 'position': 'fixed',
                 'width': '100%',
@@ -467,7 +467,7 @@ GameOver = new Class({
                 'opacity': 0.8,
                 'z-index': 4,
             }
-        }).inject(this.jogo.container);
+        }).inject(this.jogo.container);*/
 
         this.el = new Element('div', {
             'styles': {
@@ -512,7 +512,7 @@ GameOver = new Class({
     },
 
     die() {
-        this.overlay.dispose();
+        //this.overlay.dispose();
         this.el.dispose();
     },
 });
