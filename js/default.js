@@ -8,8 +8,12 @@ Jogo = new Class({
 
     initialize(container) {
         this.container = container;
+        this.start();
+    },
 
+    start(){
         this.container.setStyles({
+            'position': 'relative',
             'display': 'flex',
             'font-family': 'Roboto, Arial',
         });
@@ -52,8 +56,17 @@ Jogo = new Class({
     gameOver(){
         if (this.running){
             this.running = false;
-            alert('Fim de jogo! Você fez ' + this.score + ' pontos.');
+            new GameOver(this);
         }
+    },
+
+    restart() {
+        this.score = 0;
+        this.speed = 200;
+        this.running = true;
+
+        this.container.empty();
+        this.start();
     },
 });
 
@@ -440,3 +453,65 @@ Comida = new Class({
     },
 });
 
+GameOver = new Class({
+    initialize(jogo) {
+        this.jogo = jogo;
+
+        this.overlay = new Element('div', {
+            'styles': {
+                'position': 'fixed',
+                'width': '100%',
+                'height': '100%',
+                'background': '#333',
+                'opacity': 0.8,
+                'z-index': 4,
+            }
+        }).inject(this.jogo.container);
+
+        this.el = new Element('div', {
+            'styles': {
+                'position': 'absolute',
+                'width': 300,
+                'height': 160,
+                'background': '#fff',
+                'border': '2px solid #555',
+                'text-align': 'center',
+                'border-radius': 10,
+                'top': '50%',
+                'left': '50%',
+                'box-sizing': 'border-box',
+                'margin-left': -150,
+                'margin-top': -80,
+                'z-index': 5,
+            }
+        }).adopt(
+            new Element('h2', {
+                'text': 'Fim de jogo!',
+                'styles': {
+                    'margin': 15,
+                },
+            }),
+            new Element('p', {'text': 'Você fez ' + this.jogo.score + ' pontos.'}),
+            new Element('button', {
+                'text': 'Jogar de novo',
+                'styles': {
+                    'display': 'block',
+                    'margin': '20px auto 0',
+                    'padding': '5px 10px',
+                    'cursor': 'pointer',
+                },
+                'events': {
+                    'click': () => {
+                        this.jogo.restart();
+                        this.die();
+                    },
+                },
+            }),
+        ).inject(this.jogo.container);
+    },
+
+    die() {
+        this.overlay.dispose();
+        this.el.dispose();
+    },
+});
