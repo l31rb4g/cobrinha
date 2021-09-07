@@ -338,7 +338,6 @@ Bloco = new Class({
         this.cobrinha = cobrinha;
         this.position = position;
 
-        // crashando se for fora do grid
         this.square = this.cobrinha.jogo.grid.el.getElements('> div')[this.position];
 
         this.el = new Element('div', {
@@ -349,7 +348,11 @@ Bloco = new Class({
                 'padding': 0,
                 'box-sizing': 'border-box',
             }
-        }).inject(this.square);
+        });
+
+        if (this.square){
+            this.el.inject(this.square);
+        }
     },
 });
 
