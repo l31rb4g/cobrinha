@@ -112,6 +112,8 @@ Grid = new Class({
         this.cols = Math.floor((espacoDisponivel.x - 2) / 36);
         this.rows = Math.floor((espacoDisponivel.y - 2) / 32);
 
+        console.log(this.cols, this.rows);
+
         for (i=0; i<this.cols * this.rows; i++){
             new Element('div', {
                 'styles': {
