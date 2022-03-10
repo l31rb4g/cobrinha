@@ -446,8 +446,8 @@ Comida = new Class({
             'styles': {
                 'height': '100%',
                 'color': '#fff',
-                'background': '#3779C6',
-                'border': '1px solid #3779C6',
+                'background': '#0061ff',
+                'border': '1px solid #0061ff',
                 'line-height': 29,
                 'text-align': 'center',
                 'font-size': 11,
